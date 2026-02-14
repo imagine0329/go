@@ -1,0 +1,247 @@
+/* ===== Ranking & Competition ===== */
+.ranking-period-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.ranking-period-tabs button {
+    padding: 8px 20px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.ranking-period-tabs button.active {
+    background: #1a73e8;
+    color: #fff;
+    border-color: #1a73e8;
+}
+.ranking-podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 20px 0;
+}
+.podium-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+.podium-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 22px;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.podium-item:nth-child(2) .podium-avatar { width: 68px; height: 68px; font-size: 26px; }
+.podium-name { font-weight: 700; font-size: 14px; }
+.podium-score { font-size: 13px; color: #888; }
+.podium-bar {
+    width: 80px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    font-weight: 800;
+    font-size: 20px;
+    color: #fff;
+}
+.podium-item:nth-child(1) .podium-bar { height: 80px; background: linear-gradient(180deg, #90caf9, #1a73e8); }
+.podium-item:nth-child(2) .podium-bar { height: 110px; background: linear-gradient(180deg, #ffd54f, #f9a825); }
+.podium-item:nth-child(3) .podium-bar { height: 60px; background: linear-gradient(180deg, #ffab91, #e65100); }
+
+.ranking-list { list-style: none; }
+.ranking-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: transform 0.15s;
+}
+.ranking-item:hover { transform: translateY(-1px); }
+.ranking-item.my-rank { border: 2px solid #1a73e8; background: #f0f6ff; }
+.rank-number {
+    font-size: 18px;
+    font-weight: 800;
+    color: #aaa;
+    width: 36px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.rank-number.top1 { color: #f9a825; }
+.rank-number.top2 { color: #90a4ae; }
+.rank-number.top3 { color: #e65100; }
+.rank-info { flex: 1; margin-left: 14px; }
+.rank-name { font-weight: 700; font-size: 15px; }
+.rank-detail { font-size: 12px; color: #888; margin-top: 2px; }
+.rank-bar-container {
+    width: 160px;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    margin-left: 16px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.rank-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #1a73e8, #0d47a1);
+    transition: width 0.5s ease;
+}
+.rank-score {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a73e8;
+    margin-left: 16px;
+    min-width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* Battle Section */
+.battle-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-top: 28px;
+}
+.battle-section h3 { font-size: 18px; margin-bottom: 16px; }
+.battle-arena {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+.battle-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+}
+.battle-player .podium-avatar { width: 64px; height: 64px; font-size: 24px; }
+.battle-player .battle-name { font-weight: 700; font-size: 15px; }
+.battle-player .battle-score {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a73e8;
+}
+.battle-vs {
+    font-size: 32px;
+    font-weight: 900;
+    color: #e0e0e0;
+}
+.battle-result {
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    margin-top: 8px;
+}
+.battle-result.win { background: #e8f5e9; color: #2e7d32; }
+.battle-result.lose { background: #ffebee; color: #c62828; }
+.battle-result.draw { background: #fff3e0; color: #e65100; }
+.battle-select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    margin-bottom: 12px;
+    background: #fff;
+}
+.battle-btn {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #f9a825, #e65100);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.battle-btn:hover { opacity: 0.9; }
+.battle-history {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+}
+.battle-history h4 { font-size: 14px; color: #888; margin-bottom: 10px; }
+.battle-log {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+.battle-log .bl-players { font-weight: 600; }
+.battle-log .bl-result { font-weight: 700; }
+.battle-log .bl-result.win { color: #2e7d32; }
+.battle-log .bl-result.lose { color: #c62828; }
+.battle-log .bl-result.draw { color: #e65100; }
+.battle-log .bl-date { color: #aaa; font-size: 11px; }
+
+/* Achievements */
+.achievements-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-top: 20px;
+}
+.achievements-section h3 { font-size: 18px; margin-bottom: 16px; }
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+.achievement-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.15s;
+}
+.achievement-card.unlocked {
+    background: linear-gradient(135deg, #fff8e1, #fff3e0);
+    border: 1px solid #ffd54f;
+}
+.achievement-card .ach-icon { font-size: 32px; margin-bottom: 6px; }
+.achievement-card .ach-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.achievement-card .ach-desc { font-size: 11px; color: #888; }
+.achievement-card.locked { opacity: 0.5; }
+
+@media (max-width: 600px) {
+    .ranking-podium { gap: 8px; }
+    .podium-bar { width: 60px; }
+    .rank-bar-container { width: 80px; }
+    .battle-arena { gap: 12px; }
+}
