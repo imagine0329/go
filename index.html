@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go - English Study App</title>
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/feed.css">
+    <link rel="stylesheet" href="css/vocab.css">
+    <link rel="stylesheet" href="css/members.css">
+    <link rel="stylesheet" href="css/ranking.css">
+    <link rel="stylesheet" href="css/feedback.css">
+</head>
+<body>
+
+    <!-- ===== Login / Register ===== -->
+    <div id="authPage">
+        <header>
+            <div class="logo"><img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="header-logo"></div>
+        </header>
+        <div class="auth-wrapper">
+            <div class="auth-box" id="loginBox">
+                <h2>👋 Welcome Back</h2>
+                <p class="subtitle">Let's start studying English together</p>
+                <div class="auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPw" placeholder="Password" onkeydown="if(event.key==='Enter')handleLogin()">
+                <button class="btn-primary" id="loginBtn" onclick="handleLogin()">Log In</button>
+                <div class="auth-toggle">
+                    Don't have an account? <a onclick="showRegister()">Sign Up</a>
+                </div>
+            </div>
+            <div class="auth-box" id="registerBox" style="display:none;">
+                <h2>📝 Sign Up</h2>
+                <p class="subtitle">Create a new account</p>
+                <div class="auth-error" id="registerError"></div>
+                <input type="text" id="regName" placeholder="Name (Nickname)">
+                <input type="email" id="regEmail" placeholder="Email">
+                <input type="password" id="regPw" placeholder="Password (min 6 characters)">
+                <input type="password" id="regPwConfirm" placeholder="Confirm Password" onkeydown="if(event.key==='Enter')handleRegister()">
+                <button class="btn-primary" id="regBtn" onclick="handleRegister()">Sign Up</button>
+                <div class="auth-toggle">
+                    Already have an account? <a onclick="showLogin()">Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Main App ===== -->
+    <div id="mainApp" style="display:none;">
+        <header>
+            <div class="logo"><img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="header-logo"></div>
+            <div class="user-info">
+                <span id="currentUserName"></span>
+                <button class="btn-logout" onclick="handleLogout()">Log Out</button>
+            </div>
+        </header>
+        <div class="tab-nav">
+            <button class="active" onclick="switchTab('feed', this)">📢 Study Feed</button>
+            <button onclick="switchTab('study', this)">📖 My Study</button>
+            <button onclick="switchTab('ranking', this)">🏆 Ranking</button>
+            <button onclick="switchTab('members', this)">👥 Members</button>
+            <button onclick="switchTab('feedback', this)">💡 Feedback</button>
+        </div>
+        <div class="container">
+
+            <!-- Tab: Study Feed -->
+            <div id="feedPage" class="page active">
+                <div class="feed-header">
+                    <h2>📢 Study Feed</h2>
+                    <button class="btn-new-post" onclick="togglePostForm()">✏️ New Post</button>
+                </div>
+                <div class="post-form" id="postForm">
+                    <select id="postCategory">
+                        <option value="Vocabulary">📗 Vocabulary</option>
+                        <option value="Grammar">📘 Grammar</option>
+                        <option value="Conversation">📙 Conversation</option>
+                        <option value="Tips">💡 Tips</option>
+                        <option value="Questions">❓ Questions</option>
+                    </select>
+                    <input type="text" id="postTitle" placeholder="Enter a title">
+                    <div class="video-input-row">
+                        <span class="video-icon">🎬</span>
+                        <input type="text" id="postVideoUrl" placeholder="Video URL (YouTube, Vimeo, etc.) — optional">
+                    </div>
+                    <div class="post-form-tabs">
+                        <button class="active" onclick="showWriteTab(this)">✏️ Write</button>
+                        <button onclick="showPreviewTab(this)">👁️ Preview</button>
+                    </div>
+                    <div class="format-help" id="formatHelp">
+                        <strong>Formatting:</strong>
+                        <code>**bold**</code>
+                        <code>*italic*</code>
+                        <code>- list item</code>
+                        <code>### heading</code>
+                        <code>> quote</code>
+                        <code>---</code> divider ·
+                        YouTube/Vimeo links auto-embed as video 🎬
+                    </div>
+                    <textarea id="postContent" placeholder="Share your study content...&#10;&#10;Formatting tips:&#10;**bold word**: meaning&#10;- list item&#10;> quoted example&#10;### Section Title&#10;&#10;Paste a YouTube link to embed video!"></textarea>
+                    <div class="post-preview" id="postPreview"></div>
+                    <div class="form-actions">
+                        <button class="btn-cancel" onclick="togglePostForm()">Cancel</button>
+                        <button class="btn-submit" onclick="submitPost()">Post</button>
+                    </div>
+                </div>
+                <input type="text" class="search-bar" id="feedSearch" placeholder="🔍 Search by title, content, author..." oninput="renderFeed()">
+                <div class="feed-period-filter">
+                    <button class="period-btn active" onclick="setFeedPeriod('daily', this)">📅 Daily</button>
+                    <button class="period-btn" onclick="setFeedPeriod('weekly', this)">📆 Weekly</button>
+                    <button class="period-btn" onclick="setFeedPeriod('monthly', this)">🗓️ Monthly</button>
+                    <button class="period-btn" onclick="setFeedPeriod('all', this)">📋 All</button>
+                    <button class="period-btn" onclick="setFeedPeriod('custom', this)">🔎 Pick Date</button>
+                    <input type="date" id="feedCustomDate" style="display:none;padding:7px 12px;border:1.5px solid #1a73e8;border-radius:20px;font-size:13px;font-weight:600;color:#1a73e8;outline:none;background:#e8f0fe;" onchange="renderFeed()">
+                    <span style="margin-left:auto;"></span>
+                    <button class="period-btn unstudied-btn" id="unstudiedToggle" onclick="toggleUnstudiedFilter(this)">📝 Unstudied</button>
+                </div>
+                <div id="feedList"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+            </div>
+
+            <!-- Tab: My Study -->
+            <div id="studyPage" class="page">
+                <div class="my-study-header">
+                    <h2>📖 My Study</h2>
+                </div>
+
+                <!-- Studied Posts -->
+                <div id="studiedSection" class="study-section active">
+                    <div class="studied-stats" id="studiedStats"></div>
+                    <input type="text" class="search-bar" id="studiedSearch" placeholder="🔍 Search studied posts..." oninput="renderStudiedPosts()">
+                    <div id="studiedPostList"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Members -->
+            <div id="membersPage" class="page">
+                <h2 style="margin-bottom:20px;">👥 Members</h2>
+                <div class="member-stats" id="memberStats"></div>
+                <input type="text" class="search-bar" id="memberSearch" placeholder="🔍 Search members..." oninput="renderMembers()">
+                <ul class="member-list" id="memberList"></ul>
+            </div>
+
+            <!-- Tab: Ranking & Competition -->
+            <div id="rankingPage" class="page">
+                <h2 style="margin-bottom:20px;">🏆 Study Ranking</h2>
+
+                <!-- Period Filter -->
+                <div class="ranking-period-tabs">
+                    <button class="active" onclick="setRankPeriod('all', this)">All Time</button>
+                    <button onclick="setRankPeriod('month', this)">This Month</button>
+                    <button onclick="setRankPeriod('week', this)">This Week</button>
+                </div>
+
+                <!-- Podium (Top 3) -->
+                <div class="ranking-podium" id="rankingPodium"></div>
+
+                <!-- Full Ranking List -->
+                <ul class="ranking-list" id="rankingList"></ul>
+
+                <!-- Achievements -->
+                <div class="achievements-section">
+                    <h3>🎖️ My Achievements</h3>
+                    <div class="achievement-grid" id="achievementGrid"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Feedback -->
+            <div id="feedbackPage" class="page">
+                <div class="feedback-header">
+                    <h2>💡 Feedback & Suggestions</h2>
+                    <button class="btn-new-post" onclick="toggleFeedbackForm()">✏️ Write Feedback</button>
+                </div>
+
+                <!-- Submit Form -->
+                <div class="feedback-form" id="feedbackForm">
+                    <select id="feedbackType">
+                        <option value="Feature Request">🚀 Feature Request</option>
+                        <option value="Improvement">✨ Improvement</option>
+                        <option value="Bug Report">🐛 Bug Report</option>
+                        <option value="Other">💬 Other</option>
+                    </select>
+                    <input type="text" id="feedbackTitle" placeholder="Title — What's your idea?">
+                    <textarea id="feedbackContent" placeholder="Describe your suggestion in detail...&#10;&#10;What would you like to see?&#10;How would it help?"></textarea>
+                    <div class="form-actions">
+                        <button class="btn-cancel" onclick="toggleFeedbackForm()">Cancel</button>
+                        <button class="btn-submit" onclick="submitFeedback()">Submit</button>
+                    </div>
+                </div>
+
+                <!-- Filter -->
+                <div class="feedback-filters">
+                    <button class="fb-filter-btn active" onclick="setFeedbackFilter('all', this)">📋 All</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Feature Request', this)">🚀 Feature</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Improvement', this)">✨ Improve</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Bug Report', this)">🐛 Bug</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Other', this)">💬 Other</button>
+                    <span style="margin-left:auto;"></span>
+                    <select id="feedbackSort" onchange="renderFeedback()" style="padding:7px 14px;border:1.5px solid #ddd;border-radius:20px;font-size:13px;font-weight:600;color:#555;cursor:pointer;">
+                        <option value="newest">🕐 Newest</option>
+                        <option value="votes">🔥 Most Voted</option>
+                    </select>
+                </div>
+
+                <!-- Feedback List -->
+                <div id="feedbackList"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ===== Firebase SDK ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- ===== JS Modules (load order matters) ===== -->
+    <script src="js/app.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/formatter.js"></script>
+    <script src="js/feed.js"></script>
+    <script src="js/vocab.js"></script>
+    <script src="js/members.js"></script>
+    <script src="js/ranking.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/init.js"></script>
+
+</body>
+</html>
