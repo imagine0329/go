@@ -1,8 +1,6 @@
 // ===== Ranking & Competition =====
 
 let rankPeriod = 'all';
-let battleLogs = [];
-let unsubBattles = null;
 
 function setRankPeriod(period, btn) {
     rankPeriod = period;
@@ -85,16 +83,6 @@ function renderRanking() {
 
     // Achievements
     renderAchievements();
-
-    // Battle opponent selector
-    const sel = document.getElementById('battleOpponent');
-    sel.innerHTML = '<option value="">-- Select Opponent --</option>' +
-        allMembers.filter(u => u.uid !== currentUser.uid).map(u =>
-            `<option value="${u.uid}">${esc(u.name||u.email)}</option>`
-        ).join('');
-
-    // Battle history
-    renderBattleHistory();
 }
 
 // Achievements
@@ -124,111 +112,4 @@ function renderAchievements() {
             <div class="ach-desc">${a.desc}</div>
         </div>`;
     }).join('');
-}
-
-// 1v1 Battle
-async function startBattle() {
-    const oppUid = document.getElementById('battleOpponent').value;
-    const period = document.getElementById('battlePeriod').value;
-    if (!oppUid) { showToast('⚠️ Please select an opponent.'); return; }
-
-    const opp = allMembers.find(u => u.uid === oppUid);
-    if (!opp) return;
-
-    const myScore  = getStudiedCount(currentUser.uid, period);
-    const oppScore = getStudiedCount(oppUid, period);
-
-    let resultText, resultClass;
-    if (myScore > oppScore) {
-        resultText = `🎉 You Win! (+${myScore - oppScore})`;
-        resultClass = 'win';
-    } else if (myScore < oppScore) {
-        resultText = `😢 You Lose! (-${oppScore - myScore})`;
-        resultClass = 'lose';
-    } else {
-        resultText = `🤝 It's a Draw!`;
-        resultClass = 'draw';
-    }
-
-    const periodLabel = period === 'all' ? 'All Time' : period === 'month' ? 'This Month' : 'This Week';
-
-    const arena = document.getElementById('battleArena');
-    arena.style.display = 'block';
-    arena.innerHTML = `
-        <p style="text-align:center; font-size:12px; color:#888; margin-bottom:8px;">Period: ${periodLabel}</p>
-        <div class="battle-arena">
-            <div class="battle-player">
-                <div class="podium-avatar" style="background:linear-gradient(135deg,#1a73e8,#0d47a1);">${currentUser.name.charAt(0)}</div>
-                <div class="battle-name">${esc(currentUser.name)}</div>
-                <div class="battle-score">${myScore}</div>
-            </div>
-            <div class="battle-vs">VS</div>
-            <div class="battle-player">
-                <div class="podium-avatar" style="background:linear-gradient(135deg,#e65100,#bf360c);">${(opp.name||'?').charAt(0)}</div>
-                <div class="battle-name">${esc(opp.name)}</div>
-                <div class="battle-score">${oppScore}</div>
-            </div>
-        </div>
-        <div class="battle-result ${resultClass}">${resultText}</div>
-    `;
-
-    // Save battle log to Firestore
-    await db.collection('battles').add({
-        player1Uid: currentUser.uid,
-        player1Name: currentUser.name,
-        player1Score: myScore,
-        player2Uid: oppUid,
-        player2Name: opp.name,
-        player2Score: oppScore,
-        period,
-        result: myScore > oppScore ? 'player1' : myScore < oppScore ? 'player2' : 'draw',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    showToast('⚔️ Battle complete!');
-}
-
-function renderBattleHistory() {
-    const histEl = document.getElementById('battleHistory');
-    const myBattles = battleLogs.filter(b =>
-        b.player1Uid === currentUser.uid || b.player2Uid === currentUser.uid
-    ).slice(0, 10);
-
-    if (myBattles.length === 0) {
-        histEl.style.display = 'none';
-        return;
-    }
-
-    histEl.style.display = 'block';
-    histEl.innerHTML = `<h4>📜 Recent Battles</h4>` + myBattles.map(b => {
-        const isP1 = b.player1Uid === currentUser.uid;
-        const oppName = isP1 ? b.player2Name : b.player1Name;
-        const myS = isP1 ? b.player1Score : b.player2Score;
-        const opS = isP1 ? b.player2Score : b.player1Score;
-        let res, cls;
-        if (b.result === 'draw') { res = 'Draw'; cls = 'draw'; }
-        else if ((b.result === 'player1' && isP1) || (b.result === 'player2' && !isP1)) { res = 'Win'; cls = 'win'; }
-        else { res = 'Lose'; cls = 'lose'; }
-        const dateStr = b.createdAt ? b.createdAt.toDate().toLocaleDateString('en-US') : '';
-        return `
-        <div class="battle-log">
-            <span class="bl-players">You (${myS}) vs ${esc(oppName)} (${opS})</span>
-            <span class="bl-result ${cls}">${res}</span>
-            <span class="bl-date">${dateStr}</span>
-        </div>`;
-    }).join('');
-}
-
-// Attach battle listener
-function attachBattleListener() {
-    unsubBattles = db.collection('battles')
-        .orderBy('createdAt', 'desc')
-        .onSnapshot(snap => {
-            battleLogs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderBattleHistory();
-        });
-}
-
-function detachBattleListener() {
-    if (unsubBattles) unsubBattles();
 }

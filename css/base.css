@@ -9,32 +9,33 @@ body {
 
 /* ===== Header ===== */
 header {
-    background: linear-gradient(135deg, #1a73e8, #0d47a1);
-    color: #fff;
+    background: #fff;
+    color: #333;
     padding: 0 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    height: 68px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
     z-index: 100;
 }
-.logo { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
+.logo { font-size: 26px; font-weight: 800; letter-spacing: 2px; display: flex; align-items: center; gap: 12px; color: #1a73e8; }
+.header-logo { height: 40px; width: auto; }
 .user-info { display: flex; align-items: center; gap: 12px; }
-.user-info span { font-size: 14px; }
+.user-info span { font-size: 14px; color: #555; }
 .btn-logout {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.4);
-    color: #fff;
+    background: #f0f2f5;
+    border: 1px solid #ddd;
+    color: #555;
     padding: 6px 16px;
     border-radius: 20px;
     cursor: pointer;
     font-size: 13px;
     transition: background 0.2s;
 }
-.btn-logout:hover { background: rgba(255,255,255,0.35); }
+.btn-logout:hover { background: #e0e2e5; color: #333; }
 
 /* ===== Tab Navigation ===== */
 .tab-nav {

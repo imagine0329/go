@@ -19,7 +19,7 @@
     <!-- ===== Login / Register ===== -->
     <div id="authPage">
         <header>
-            <div class="logo">GO</div>
+            <div class="logo"><img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="header-logo"></div>
         </header>
         <div class="auth-wrapper">
             <div class="auth-box" id="loginBox">
@@ -52,7 +52,7 @@
     <!-- ===== Main App ===== -->
     <div id="mainApp" style="display:none;">
         <header>
-            <div class="logo">GO</div>
+            <div class="logo"><img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="header-logo"></div>
             <div class="user-info">
                 <span id="currentUserName"></span>
                 <button class="btn-logout" onclick="handleLogout()">Log Out</button>
@@ -164,25 +164,6 @@
                 <div class="achievements-section">
                     <h3>🎖️ My Achievements</h3>
                     <div class="achievement-grid" id="achievementGrid"></div>
-                </div>
-
-                <!-- 1v1 Battle -->
-                <div class="battle-section">
-                    <h3>⚔️ 1v1 Study Battle</h3>
-                    <p style="font-size:13px; color:#888; margin-bottom:14px;">
-                        Challenge a member! The one who studied more posts wins.
-                    </p>
-                    <select class="battle-select" id="battleOpponent"></select>
-                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                        <select class="battle-select" id="battlePeriod" style="flex:1; margin-bottom:0;">
-                            <option value="all">All Time</option>
-                            <option value="month">This Month</option>
-                            <option value="week">This Week</option>
-                        </select>
-                        <button class="battle-btn" onclick="startBattle()">⚔️ Battle!</button>
-                    </div>
-                    <div id="battleArena" style="display:none;"></div>
-                    <div class="battle-history" id="battleHistory" style="display:none;"></div>
                 </div>
             </div>
 
