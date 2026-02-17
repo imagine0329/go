@@ -1,0 +1,437 @@
+/* ===== Reset & Base ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* ===== Header ===== */
+header {
+    background: #fff;
+    color: #333;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.logo { font-size: 26px; font-weight: 800; letter-spacing: 2px; display: flex; align-items: center; gap: 12px; color: #1a73e8; }
+.header-logo { height: 40px; width: auto; }
+.user-info { display: flex; align-items: center; gap: 12px; }
+.user-info span { font-size: 14px; color: #555; }
+.btn-logout {
+    background: #f0f2f5;
+    border: 1px solid #ddd;
+    color: #555;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+.btn-logout:hover { background: #e0e2e5; color: #333; }
+
+/* ===== Mobile Top Bar ===== */
+.mobile-topbar {
+    display: none;
+}
+
+/* ===== App Layout (Sidebar + Content) ===== */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.04);
+}
+.sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sidebar-logo-img {
+    height: 36px;
+    width: auto;
+}
+.sidebar-menu {
+    flex: 1;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+.sidebar-btn:hover {
+    background: #f0f4ff;
+    color: #1a73e8;
+}
+.sidebar-btn.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+.sidebar-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.sidebar-label {
+    white-space: nowrap;
+}
+.sidebar-user {
+    padding: 16px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.sidebar-user-name {
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+    flex: 1;
+    margin-left: 240px;
+    min-height: 100vh;
+    background: #f0f2f5;
+    transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.dict-open .main-content {
+    margin-right: 380px;
+}
+
+/* ===== Main Container ===== */
+.container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+/* ===== Common ===== */
+.page { display: none; }
+.page.active { display: block; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
+.empty-state .emoji { font-size: 48px; margin-bottom: 16px; }
+.empty-state p { font-size: 15px; }
+
+.search-bar {
+    width: 100%;
+    padding: 12px 18px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 20px;
+    background: #fff;
+}
+.search-bar:focus { border-color: #1a73e8; }
+
+/* Loading */
+.loading { text-align: center; padding: 60px; color: #888; font-size: 16px; }
+.spinner {
+    width: 40px; height: 40px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #1a73e8;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #333;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    z-index: 300;
+    transition: transform 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px;
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+}
+.modal h3 { margin-bottom: 20px; font-size: 20px; color: #1a73e8; }
+.modal input,
+.modal textarea {
+    width: 100%;
+    padding: 11px 14px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+}
+.modal textarea { height: 80px; resize: vertical; }
+.modal .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
+.modal .form-actions button {
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ===== Edit Modal ===== */
+.edit-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.edit-modal-overlay.show { opacity: 1; }
+.edit-modal {
+    background: #fff;
+    border-radius: 18px;
+    width: 520px;
+    max-width: 92vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+    transform: translateY(20px);
+    transition: transform 0.25s;
+}
+.edit-modal-overlay.show .edit-modal { transform: translateY(0); }
+.edit-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+}
+.edit-modal-header h3 { font-size: 18px; color: #1a73e8; margin: 0; }
+.edit-modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: background 0.15s;
+}
+.edit-modal-close:hover { background: #f0f0f0; color: #333; }
+.edit-modal-body {
+    padding: 20px 24px;
+}
+.edit-modal-body select,
+.edit-modal-body input,
+.edit-modal-body textarea {
+    width: 100%;
+    padding: 11px 14px;
+    margin-bottom: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+.edit-modal-body select:focus,
+.edit-modal-body input:focus,
+.edit-modal-body textarea:focus { border-color: #1a73e8; }
+.edit-modal-body textarea { height: 120px; resize: vertical; }
+.edit-modal-body select { cursor: pointer; }
+.edit-modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 0 24px 20px;
+}
+.edit-modal-footer button {
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Studied Item Actions */
+.studied-item-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 0 4px;
+    border-top: 1px solid #eee;
+    margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+    /* ===== Mobile Top Bar ===== */
+    .mobile-topbar {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 150;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .mobile-topbar-logo { height: 28px; width: auto; }
+    .mobile-topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .mobile-topbar-name {
+        font-size: 12px;
+        color: #555;
+        font-weight: 600;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .mobile-topbar .btn-logout { font-size: 11px; padding: 5px 10px; }
+
+    /* ===== Sidebar → Bottom Nav ===== */
+    .sidebar {
+        width: 100%;
+        height: 60px;
+        flex-direction: row;
+        position: fixed;
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-right: none;
+        border-top: 1px solid #e0e0e0;
+        box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+        z-index: 200;
+    }
+    .sidebar-logo { display: none; }
+    .sidebar-menu {
+        flex-direction: row;
+        padding: 0;
+        gap: 0;
+        flex: 1;
+        justify-content: space-around;
+        align-items: center;
+        overflow-x: auto;
+    }
+    .sidebar-btn {
+        flex-direction: column;
+        padding: 6px 4px;
+        gap: 2px;
+        font-size: 10px;
+        border-radius: 8px;
+        min-width: 0;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+    }
+    .sidebar-btn.active {
+        background: none;
+    }
+    .sidebar-icon { font-size: 20px; width: auto; }
+    .sidebar-label {
+        display: block;
+        font-size: 9px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 56px;
+        text-align: center;
+    }
+    .sidebar-user { display: none; }
+
+    /* ===== Main Content shifts ===== */
+    .main-content {
+        margin-left: 0;
+        padding-bottom: 70px;
+    }
+    body.dict-open .main-content {
+        margin-right: 0;
+    }
+
+    /* ===== Container ===== */
+    .container {
+        padding: 16px 12px;
+        padding-bottom: 80px;
+    }
+
+    /* ===== Edit Modal ===== */
+    .edit-modal { width: 95vw; max-height: 90vh; }
+    .edit-modal-header { padding: 16px 16px 0; }
+    .edit-modal-body { padding: 16px; }
+    .edit-modal-footer { padding: 0 16px 16px; }
+
+    /* ===== Modal ===== */
+    .modal { padding: 24px 16px; width: 95vw; }
+
+    /* ===== Toast ===== */
+    .toast { bottom: 80px; }
+
+    /* ===== Search bar ===== */
+    .search-bar { font-size: 16px; padding: 10px 14px; }
+}

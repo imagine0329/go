@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Go - English Study App</title>
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/feed.css">
+    <link rel="stylesheet" href="css/vocab.css">
+    <link rel="stylesheet" href="css/members.css">
+    <link rel="stylesheet" href="css/ranking.css">
+    <link rel="stylesheet" href="css/memorize.css">
+    <link rel="stylesheet" href="css/feedback.css">
+    <link rel="stylesheet" href="css/dictionary.css">
+</head>
+<body>
+
+    <!-- ===== Login / Register ===== -->
+    <div id="authPage">
+        <header>
+            <div class="logo"><img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="header-logo"></div>
+        </header>
+        <div class="auth-wrapper">
+            <div class="auth-box" id="loginBox">
+                <img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="auth-logo">
+                <div class="auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPw" placeholder="Password" onkeydown="if(event.key==='Enter')handleLogin()">
+                <button class="btn-primary" id="loginBtn" onclick="handleLogin()">Log In</button>
+                <div class="auth-toggle">
+                    Don't have an account? <a onclick="showRegister()">Sign Up</a>
+                </div>
+            </div>
+            <div class="auth-box" id="registerBox" style="display:none;">
+                <img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="auth-logo">
+                <h2>📝 Sign Up</h2>
+                <p class="subtitle">Create a new account</p>
+                <div class="auth-error" id="registerError"></div>
+                <input type="text" id="regName" placeholder="Name (Nickname)">
+                <input type="email" id="regEmail" placeholder="Email">
+                <input type="password" id="regPw" placeholder="Password (min 6 characters)">
+                <input type="password" id="regPwConfirm" placeholder="Confirm Password" onkeydown="if(event.key==='Enter')handleRegister()">
+                <button class="btn-primary" id="regBtn" onclick="handleRegister()">Sign Up</button>
+                <div class="auth-toggle">
+                    Already have an account? <a onclick="showLogin()">Log In</a>
+                </div>
+            </div>
+            <div class="auth-box" id="pendingBox" style="display:none;">
+                <img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="auth-logo">
+                <div style="font-size:48px;margin-bottom:16px;">⏳</div>
+                <h2 style="color:#f57c00;">Pending Approval</h2>
+                <p class="subtitle" style="margin-bottom:24px;">Your account is waiting for admin approval.<br>You'll be able to log in once approved.</p>
+                <button class="btn-primary" onclick="handleLogout()" style="background:#f0f2f5;color:#555;">Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Main App ===== -->
+    <div id="mainApp" style="display:none;">
+        <!-- Mobile Top Bar (visible only on mobile) -->
+        <div class="mobile-topbar">
+            <img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="mobile-topbar-logo">
+            <div class="mobile-topbar-right">
+                <span class="mobile-topbar-name" id="mobileUserName"></span>
+                <button class="btn-logout" onclick="handleLogout()">Log Out</button>
+            </div>
+        </div>
+        <div class="app-layout">
+            <!-- Left Sidebar -->
+            <nav class="sidebar">
+                <div class="sidebar-logo">
+                    <img src="assets/SiemensHealthineersLogo.png" alt="Siemens Healthineers" class="sidebar-logo-img">
+                </div>
+                <div class="sidebar-menu">
+                    <button class="sidebar-btn active" onclick="switchTab('feed', this)">
+                        <span class="sidebar-icon">📢</span>
+                        <span class="sidebar-label">Study Feed</span>
+                    </button>
+                    <button class="sidebar-btn" onclick="switchTab('study', this)">
+                        <span class="sidebar-icon">📖</span>
+                        <span class="sidebar-label">My Study</span>
+                    </button>
+                    <button class="sidebar-btn" onclick="switchTab('memorize', this)">
+                        <span class="sidebar-icon">🧠</span>
+                        <span class="sidebar-label">Memorize</span>
+                    </button>
+                    <button class="sidebar-btn" onclick="switchTab('ranking', this)">
+                        <span class="sidebar-icon">🏆</span>
+                        <span class="sidebar-label">Ranking</span>
+                    </button>
+                    <button class="sidebar-btn" onclick="switchTab('members', this)">
+                        <span class="sidebar-icon">👥</span>
+                        <span class="sidebar-label">Members</span>
+                    </button>
+                    <button class="sidebar-btn" onclick="switchTab('feedback', this)">
+                        <span class="sidebar-icon">💡</span>
+                        <span class="sidebar-label">Feedback</span>
+                    </button>
+                </div>
+                <div class="sidebar-user">
+                    <div class="sidebar-user-name" id="currentUserName"></div>
+                    <button class="btn-logout" onclick="handleLogout()">Log Out</button>
+                </div>
+            </nav>
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="container">
+
+            <!-- Tab: Study Feed -->
+            <div id="feedPage" class="page active">
+                <div class="feed-header">
+                    <h2>📢 Study Feed</h2>
+                    <button class="btn-new-post" onclick="togglePostForm()">✏️ New Post</button>
+                </div>
+                <div class="post-form" id="postForm">
+                    <select id="postCategory">
+                        <option value="Vocabulary">📗 Vocabulary</option>
+                        <option value="Grammar">📘 Grammar</option>
+                        <option value="Conversation">📙 Conversation</option>
+                        <option value="Tips">💡 Tips</option>
+                        <option value="Questions">❓ Questions</option>
+                    </select>
+                    <input type="text" id="postTitle" placeholder="Enter a title">
+                    <div class="video-input-row">
+                        <span class="video-icon">🎬</span>
+                        <input type="text" id="postVideoUrl" placeholder="Video URL (YouTube, Vimeo, etc.) — optional">
+                    </div>
+                    <div class="post-form-tabs">
+                        <button class="active" onclick="showWriteTab(this)">✏️ Write</button>
+                        <button onclick="showPreviewTab(this)">👁️ Preview</button>
+                    </div>
+                    <div class="format-help" id="formatHelp">
+                        <strong>Formatting:</strong>
+                        <code>**bold**</code>
+                        <code>*italic*</code>
+                        <code>- list item</code>
+                        <code>### heading</code>
+                        <code>> quote</code>
+                        <code>---</code> divider ·
+                        YouTube/Vimeo links auto-embed as video 🎬
+                    </div>
+                    <textarea id="postContent" placeholder="Share your study content...&#10;&#10;Formatting tips:&#10;**bold word**: meaning&#10;- list item&#10;> quoted example&#10;### Section Title&#10;&#10;Paste a YouTube link to embed video!"></textarea>
+                    <div class="post-preview" id="postPreview"></div>
+                    <div class="form-actions">
+                        <button class="btn-cancel" onclick="togglePostForm()">Cancel</button>
+                        <button class="btn-new-post" onclick="submitPost()">Post</button>
+                    </div>
+                </div>
+                <input type="text" class="search-bar" id="feedSearch" placeholder="🔍 Search by title, content, author..." oninput="renderFeed()">
+                <div class="feed-period-filter">
+                    <button class="period-btn" onclick="setFeedPeriod('daily', this)">📅 Daily</button>
+                    <button class="period-btn" onclick="setFeedPeriod('weekly', this)">📆 Weekly</button>
+                    <button class="period-btn" onclick="setFeedPeriod('monthly', this)">🗓️ Monthly</button>
+                    <button class="period-btn active" onclick="setFeedPeriod('all', this)">📋 All</button>
+                    <button class="period-btn" onclick="setFeedPeriod('custom', this)">🔎 Pick Date</button>
+                    <input type="date" id="feedCustomDate" style="display:none;padding:7px 12px;border:1.5px solid #1a73e8;border-radius:20px;font-size:13px;font-weight:600;color:#1a73e8;outline:none;background:#e8f0fe;" onchange="renderFeed()">
+                    <span style="margin-left:auto;"></span>
+                    <button class="period-btn unstudied-btn" id="unstudiedToggle" onclick="toggleUnstudiedFilter(this)">📝 Unstudied</button>
+                </div>
+                <div id="feedList"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+            </div>
+
+            <!-- Tab: My Study -->
+            <div id="studyPage" class="page">
+                <div class="my-study-header">
+                    <h2>📖 My Study</h2>
+                    <div class="my-study-private-badge">🔒 Private Space</div>
+                </div>
+                <p class="my-study-desc">This is your personal study space. Only you can see your notes and study history.</p>
+
+                <!-- My Study Tabs -->
+                <div class="my-study-tabs">
+                    <button class="my-study-tab active" onclick="switchStudyTab('studied', this)">📗 Studied Posts</button>
+                    <button class="my-study-tab" onclick="switchStudyTab('notes', this)">📝 My Notes</button>
+                </div>
+
+                <!-- Studied Posts -->
+                <div id="studiedSection" class="study-section active">
+                    <div class="studied-stats" id="studiedStats"></div>
+                    <input type="text" class="search-bar" id="studiedSearch" placeholder="🔍 Search studied posts..." oninput="renderStudiedPosts()">
+                    <div id="studiedPostList"></div>
+                </div>
+
+                <!-- My Notes -->
+                <div id="notesSection" class="study-section">
+                    <div class="notes-header">
+                        <button class="btn-new-post" onclick="toggleNoteForm()">📝 New Note</button>
+                    </div>
+                    <div class="note-form" id="noteForm" style="display:none;">
+                        <input type="text" id="noteTitle" placeholder="Note title...">
+                        <textarea id="noteContent" placeholder="Write your note here...&#10;&#10;Use this space for personal study notes, reminders, vocabulary lists, grammar rules, etc."></textarea>
+                        <div class="form-actions">
+                            <button class="btn-cancel" onclick="toggleNoteForm()">Cancel</button>
+                            <button class="btn-new-post" onclick="submitNote()">Save Note</button>
+                        </div>
+                    </div>
+                    <input type="text" class="search-bar" id="noteSearch" placeholder="🔍 Search notes..." oninput="renderNotes()">
+                    <div id="notesList"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Memorize -->
+            <div id="memorizePage" class="page">
+                <div class="memorize-header">
+                    <h2>🧠 Memorize</h2>
+                    <button class="btn-new-post" onclick="toggleCardForm()">➕ Add Card</button>
+                </div>
+
+                <!-- Add Card Form -->
+                <div class="card-form" id="cardForm" style="display:none;">
+                    <div class="card-form-feed-ref" id="cardFeedRef" style="display:none;">
+                        <div class="card-feed-ref-header">
+                            <span>📢 Reference Feed</span>
+                            <button onclick="closeCardFeedRef()" title="Close">✕</button>
+                        </div>
+                        <div class="card-feed-ref-body" id="cardFeedRefBody"></div>
+                    </div>
+                    <button class="card-feed-select-btn" onclick="openCardFeedSelector()">📢 Load Feed as Reference</button>
+                    <select id="cardCategory">
+                        <option value="Vocabulary">📗 Vocabulary</option>
+                        <option value="Phrase">📙 Phrase</option>
+                        <option value="Sentence">📘 Sentence</option>
+                        <option value="Grammar">📕 Grammar</option>
+                    </select>
+                    <input type="text" id="cardFront" placeholder="Front — English word or phrase">
+                    <textarea id="cardBack" placeholder="Back — Meaning, definition, translation..."></textarea>
+                    <input type="text" id="cardExample" placeholder="Example sentence (optional) — e.g. 'She is very diligent.'">
+                    <div class="form-actions">
+                        <button class="btn-cancel" onclick="toggleCardForm()">Cancel</button>
+                        <button class="btn-new-post" onclick="submitCard()">Add Card</button>
+                    </div>
+                </div>
+
+                <!-- Memorize Mode Tabs -->
+                <div class="memorize-mode-tabs">
+                    <button class="mem-mode-btn active" onclick="setMemorizeMode('cards', this)">📋 All Cards</button>
+                    <button class="mem-mode-btn" onclick="setMemorizeMode('review', this)">
+                        📅 Today's Review
+                        <span class="review-badge" id="reviewBadge" style="display:none;">0</span>
+                    </button>
+                    <button class="mem-mode-btn" onclick="setMemorizeMode('practice', this)">🎯 Practice</button>
+                    <button class="mem-mode-btn" onclick="setMemorizeMode('quiz', this)">🧩 Quiz</button>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="memorize-filters">
+                    <button class="mem-filter-btn active" onclick="setCardFilter('all', this)">All</button>
+                    <button class="mem-filter-btn" onclick="setCardFilter('Vocabulary', this)">📗 Vocabulary</button>
+                    <button class="mem-filter-btn" onclick="setCardFilter('Phrase', this)">📙 Phrase</button>
+                    <button class="mem-filter-btn" onclick="setCardFilter('Sentence', this)">📘 Sentence</button>
+                    <button class="mem-filter-btn" onclick="setCardFilter('Grammar', this)">📕 Grammar</button>
+                    <span style="margin-left:auto;"></span>
+                    <select id="cardStatusFilter" onchange="renderMemorize()" style="padding:7px 14px;border:1.5px solid #ddd;border-radius:20px;font-size:13px;font-weight:600;color:#555;cursor:pointer;">
+                        <option value="all">📋 All</option>
+                        <option value="learning">🔄 Learning</option>
+                        <option value="mastered">✅ Mastered</option>
+                    </select>
+                </div>
+
+                <!-- Cards List View -->
+                <div id="cardsListView">
+                    <div class="memorize-stats" id="memorizeStats"></div>
+                    <div class="leitner-visual" id="leitnerBoxes"></div>
+                    <input type="text" class="search-bar" id="cardSearch" placeholder="🔍 Search cards..." oninput="renderMemorize()">
+                    <div id="cardsList"></div>
+                </div>
+
+                <!-- Today's Review View -->
+                <div id="reviewView" style="display:none;">
+                    <div id="reviewContent"></div>
+                </div>
+
+                <!-- Practice View -->
+                <div id="practiceView" style="display:none;">
+                    <div class="practice-progress" id="practiceProgress"></div>
+                    <div class="practice-card-area" id="practiceCardArea"></div>
+                    <div class="practice-input-area" id="practiceInputArea"></div>
+                    <div class="practice-controls" id="practiceControls"></div>
+                    <div class="practice-info" id="practiceInfo"></div>
+                </div>
+
+                <!-- Quiz View -->
+                <div id="quizView" style="display:none;">
+                    <div id="quizSetup"></div>
+                    <div id="quizContent" style="display:none;">
+                        <div class="quiz-header-bar" id="quizHeaderBar"></div>
+                        <div class="practice-progress" id="quizProgress"></div>
+                        <div class="quiz-timer-bar" id="quizTimerBar"></div>
+                        <div class="quiz-question-area" id="quizQuestionArea"></div>
+                        <div class="quiz-choices-area" id="quizChoicesArea"></div>
+                        <div class="quiz-feedback-area" id="quizFeedbackArea"></div>
+                        <div class="practice-info" id="quizInfo"></div>
+                    </div>
+                    <div id="quizResult" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Members -->
+            <div id="membersPage" class="page">
+                <h2 style="margin-bottom:20px;">👥 Members</h2>
+                <div class="member-stats" id="memberStats"></div>
+                <input type="text" class="search-bar" id="memberSearch" placeholder="🔍 Search members..." oninput="renderMembers()">
+                <ul class="member-list" id="memberList"></ul>
+            </div>
+
+            <!-- Tab: Ranking & Competition -->
+            <div id="rankingPage" class="page">
+                <h2 style="margin-bottom:20px;">🏆 Study Ranking</h2>
+
+                <!-- Ranking Type Toggle -->
+                <div class="ranking-type-tabs">
+                    <button class="rank-type-btn active" onclick="setRankType('feed', this)">📢 Feed Study</button>
+                    <button class="rank-type-btn" onclick="setRankType('memorize', this)">🧠 Memorize</button>
+                </div>
+
+                <!-- Period Filter -->
+                <div class="ranking-period-tabs">
+                    <button class="active" onclick="setRankPeriod('all', this)">All Time</button>
+                    <button onclick="setRankPeriod('month', this)">This Month</button>
+                    <button onclick="setRankPeriod('week', this)">This Week</button>
+                </div>
+
+                <!-- Podium (Top 3) -->
+                <div class="ranking-podium" id="rankingPodium"></div>
+
+                <!-- Full Ranking List -->
+                <ul class="ranking-list" id="rankingList"></ul>
+
+                <!-- Achievements -->
+                <div class="achievements-section">
+                    <h3>🎖️ My Achievements</h3>
+                    <div class="achievement-grid" id="achievementGrid"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Feedback -->
+            <div id="feedbackPage" class="page">
+                <div class="feedback-header">
+                    <h2>💡 Feedback & Suggestions</h2>
+                    <button class="btn-new-post" onclick="toggleFeedbackForm()">✏️ Write Feedback</button>
+                </div>
+
+                <!-- Submit Form -->
+                <div class="feedback-form" id="feedbackForm">
+                    <select id="feedbackType">
+                        <option value="Feature Request">🚀 Feature Request</option>
+                        <option value="Improvement">✨ Improvement</option>
+                        <option value="Bug Report">🐛 Bug Report</option>
+                        <option value="Other">💬 Other</option>
+                    </select>
+                    <input type="text" id="feedbackTitle" placeholder="Title — What's your idea?">
+                    <textarea id="feedbackContent" placeholder="Describe your suggestion in detail...&#10;&#10;What would you like to see?&#10;How would it help?"></textarea>
+                    <div class="fb-image-section">
+                        <label class="fb-image-btn" for="feedbackImage">📷 Add Image</label>
+                        <input type="file" id="feedbackImage" accept="image/*" multiple onchange="previewFeedbackImages(this)" style="display:none;">
+                        <div class="fb-image-preview" id="feedbackImagePreview"></div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-cancel" onclick="toggleFeedbackForm()">Cancel</button>
+                        <button class="btn-new-post" onclick="submitFeedback()">Submit</button>
+                    </div>
+                </div>
+
+                <!-- Filter -->
+                <div class="feedback-filters">
+                    <button class="fb-filter-btn active" onclick="setFeedbackFilter('all', this)">📋 All</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Feature Request', this)">🚀 Feature</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Improvement', this)">✨ Improve</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Bug Report', this)">🐛 Bug</button>
+                    <button class="fb-filter-btn" onclick="setFeedbackFilter('Other', this)">💬 Other</button>
+                    <span style="margin-left:auto;"></span>
+                    <select id="feedbackSort" onchange="renderFeedback()" style="padding:7px 14px;border:1.5px solid #ddd;border-radius:20px;font-size:13px;font-weight:600;color:#555;cursor:pointer;">
+                        <option value="newest">🕐 Newest</option>
+                        <option value="votes">🔥 Most Voted</option>
+                    </select>
+                </div>
+
+                <!-- Feedback List -->
+                <div id="feedbackList"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+            </div>
+
+        </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Dictionary Toggle Button -->
+    <button class="dict-toggle-btn" id="dictToggleBtn" onclick="toggleDictPanel()" title="📖 Dictionary">📖</button>
+
+    <!-- Dictionary Right Panel -->
+    <div class="dict-panel" id="dictPanel">
+        <div class="dict-panel-header">
+            <div class="dict-panel-title">📖 English Dictionary</div>
+            <button class="dict-close-btn" onclick="closeDictPanel()">✕</button>
+        </div>
+        <div class="dict-search-area">
+            <div class="dict-search-wrap">
+                <input type="text" class="dict-search-input" id="dictSearchInput" placeholder="Type a word..." onkeydown="handleDictKeydown(event)" autocomplete="off">
+                <button class="dict-search-btn" onclick="searchDictionary()">Search</button>
+            </div>
+        </div>
+        <div class="dict-body">
+            <div id="dictResult">
+                <div class="dict-welcome">
+                    <div class="dict-welcome-icon">📖</div>
+                    <h4>English Dictionary</h4>
+                    <p>Search any English word to see its definition, pronunciation, examples, synonyms and more.</p>
+                </div>
+            </div>
+            <div id="dictHistory"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ===== Firebase SDK ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- ===== JS Modules (load order matters) ===== -->
+    <script src="js/app.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/formatter.js"></script>
+    <script src="js/feed.js"></script>
+    <script src="js/vocab.js"></script>
+    <script src="js/members.js"></script>
+    <script src="js/ranking.js"></script>
+    <script src="js/memorize.js"></script>
+    <script src="js/feedback.js"></script>
+    <script src="js/dictionary.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/init.js"></script>
+
+</body>
+</html>

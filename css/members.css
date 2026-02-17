@@ -1,0 +1,131 @@
+/* ===== Member Management ===== */
+.member-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.stat-card .stat-number { font-size: 32px; font-weight: 800; color: #1a73e8; }
+.stat-card .stat-label { font-size: 13px; color: #888; margin-top: 4px; }
+.member-list { list-style: none; }
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.member-item .member-info { display: flex; align-items: center; gap: 14px; }
+.member-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a73e8, #0d47a1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+}
+.member-name { font-weight: 600; font-size: 15px; }
+.member-role { font-size: 12px; color: #888; }
+.member-item .member-actions button {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 6px;
+    transition: all 0.2s;
+}
+.member-item .member-actions button:hover { border-color: #e74c3c; color: #e74c3c; }
+
+/* Pending Approval Section */
+.pending-section {
+    background: #fff8e1;
+    border: 2px solid #ffe082;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.pending-section h3 {
+    font-size: 16px;
+    color: #e65100;
+    margin-bottom: 12px;
+}
+.pending-section .member-list {
+    list-style: none;
+}
+.pending-item {
+    border: 1.5px dashed #f57c00 !important;
+    background: #fff !important;
+}
+.approve-btn {
+    background: #e8f5e9 !important;
+    border-color: #4caf50 !important;
+    color: #2e7d32 !important;
+    font-weight: 600;
+}
+.approve-btn:hover {
+    background: #4caf50 !important;
+    color: #fff !important;
+    border-color: #4caf50 !important;
+}
+.reject-btn {
+    background: #ffebee !important;
+    border-color: #ef5350 !important;
+    color: #c62828 !important;
+    font-weight: 600;
+}
+.reject-btn:hover {
+    background: #ef5350 !important;
+    color: #fff !important;
+    border-color: #ef5350 !important;
+}
+
+/* ===== Mobile Responsive ===== */
+@media (max-width: 768px) {
+    .member-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .stat-card { padding: 16px; border-radius: 12px; }
+    .stat-card .stat-number { font-size: 26px; }
+
+    .member-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 10px;
+    }
+    .member-item .member-info { gap: 10px; }
+    .member-avatar { width: 36px; height: 36px; font-size: 14px; }
+    .member-name { font-size: 14px; }
+    .member-item .member-actions {
+        display: flex;
+        gap: 6px;
+        width: 100%;
+    }
+    .member-item .member-actions button {
+        margin-left: 0;
+        flex: 1;
+        text-align: center;
+        padding: 8px 12px;
+    }
+
+    .pending-section { padding: 16px; border-radius: 12px; }
+    .pending-section h3 { font-size: 14px; }
+}
